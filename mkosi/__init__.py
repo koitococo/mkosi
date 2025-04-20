@@ -352,10 +352,16 @@ def check_root_populated(context: Context) -> None:
         return
 
     """Check that the root was populated by looking for a os-release file."""
-    osrelease = context.root / "usr/lib/os-release"
-    if not osrelease.exists():
+
+    # Some distributions (such as openEuler) don't ship /usr/lib/os-release, but instead ship /etc/os-release.
+    # We need to check for both to avoid false-positive.
+    candidates = [context.root / "usr/lib/os-release", context.root / "etc/os-release"]
+    for candidate in candidates:
+        if candidate.exists() and candidate.is_file():
+            break
+    else:
         die(
-            f"{osrelease} not found.",
+            f"{' or '.join( str(c) for c in candidates)} not found.",
             hint=(
                 "The root must be populated by the distribution, or from base trees, "
                 "skeleton trees, and prepare scripts."

@@ -84,6 +84,7 @@ class Distribution(StrEnum):
     rocky = enum.auto()
     alma = enum.auto()
     azure = enum.auto()
+    openEuler = enum.auto()
     custom = enum.auto()
 
     def is_centos_variant(self) -> bool:
@@ -110,6 +111,7 @@ class Distribution(StrEnum):
             Distribution.openmandriva,
             Distribution.rocky,
             Distribution.alma,
+            Distribution.openEuler,
         )
 
     def pretty_name(self) -> str:
